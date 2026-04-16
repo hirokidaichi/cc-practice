@@ -1,7 +1,9 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { InboundService } from "../modules/inbound/service.js";
 import { LocationService } from "../modules/location/service.js";
 import { ProductService } from "../modules/product/service.js";
+import { StockService } from "../modules/stock/service.js";
 import { VariantService } from "../modules/variant/service.js";
 import { WarehouseService } from "../modules/warehouse/service.js";
 import { type Config, loadConfig, overrideConfig } from "../shared/config.js";
@@ -13,6 +15,8 @@ export interface CliServices {
 	variant: VariantService;
 	warehouse: WarehouseService;
 	location: LocationService;
+	stock: StockService;
+	inbound: InboundService;
 }
 
 export interface CliContext {
@@ -52,6 +56,8 @@ export async function buildContext(options: ContextOptions = {}): Promise<CliCon
 		variant: new VariantService(db),
 		warehouse: new WarehouseService(db),
 		location: new LocationService(db),
+		stock: new StockService(db),
+		inbound: new InboundService(db),
 	};
 	return {
 		config,

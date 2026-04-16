@@ -1,8 +1,10 @@
 import { Command } from "commander";
 import { registerBundleCommands } from "./commands/bundle.js";
 import { registerDbCommands } from "./commands/db.js";
+import { registerInboundCommands } from "./commands/inbound.js";
 import { registerLocationCommands } from "./commands/location.js";
 import { registerProductCommands } from "./commands/product.js";
+import { registerStockCommands } from "./commands/stock.js";
 import { registerVariantCommands } from "./commands/variant.js";
 import { registerWarehouseCommands } from "./commands/warehouse.js";
 import type { CliContext } from "./context.js";
@@ -21,6 +23,8 @@ export function createProgram(ctx: CliContext): Command {
 	registerBundleCommands(program, ctx);
 	registerWarehouseCommands(program, ctx);
 	registerLocationCommands(program, ctx);
+	registerInboundCommands(program, ctx);
+	registerStockCommands(program, ctx);
 
 	return program;
 }
