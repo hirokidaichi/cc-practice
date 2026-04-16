@@ -5,6 +5,7 @@ import { LocationService } from "../modules/location/service.js";
 import { OrderService } from "../modules/order/service.js";
 import { OutboundService } from "../modules/outbound/service.js";
 import { ProductService } from "../modules/product/service.js";
+import { ShipmentService } from "../modules/shipment/service.js";
 import { StockService } from "../modules/stock/service.js";
 import { VariantService } from "../modules/variant/service.js";
 import { WarehouseService } from "../modules/warehouse/service.js";
@@ -21,6 +22,7 @@ export interface CliServices {
 	inbound: InboundService;
 	outbound: OutboundService;
 	order: OrderService;
+	shipment: ShipmentService;
 }
 
 export interface CliContext {
@@ -64,6 +66,7 @@ export async function buildContext(options: ContextOptions = {}): Promise<CliCon
 		inbound: new InboundService(db),
 		outbound: new OutboundService(db),
 		order: new OrderService(db),
+		shipment: new ShipmentService(db),
 	};
 	return {
 		config,
