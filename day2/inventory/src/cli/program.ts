@@ -3,6 +3,7 @@ import { registerBundleCommands } from "./commands/bundle.js";
 import { registerDbCommands } from "./commands/db.js";
 import { registerInboundCommands } from "./commands/inbound.js";
 import { registerLocationCommands } from "./commands/location.js";
+import { registerOutboundCommands } from "./commands/outbound.js";
 import { registerProductCommands } from "./commands/product.js";
 import { registerStockCommands } from "./commands/stock.js";
 import { registerVariantCommands } from "./commands/variant.js";
@@ -24,6 +25,7 @@ export function createProgram(ctx: CliContext): Command {
 	registerWarehouseCommands(program, ctx);
 	registerLocationCommands(program, ctx);
 	registerInboundCommands(program, ctx);
+	registerOutboundCommands(program, ctx);
 	registerStockCommands(program, ctx);
 
 	return program;

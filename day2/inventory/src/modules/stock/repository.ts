@@ -76,25 +76,39 @@ export function createStockRepository(db: DbExecutor) {
 		},
 
 		/**
-		 * Upsert stock_levels with given deltas. Enforces non-negative constraints via the
-		 * DB's CHECK, so callers should guard against over-consumption beforehand when possible.
+		 * Apply signed deltas to stock_levels. UPDATE is tried first so CHECK constraints
+		 * are evaluated against the post-delta values; if no row exists yet we INSERT the
+		 * deltas directly (where the CHECK correctly rejects attempts to create a row with
+		 * a negative on_hand — i.e. trying to withdraw from a location that holds no stock).
 		 */
 		async adjustStock(args: AdjustStockArgs): Promise<StockLevel> {
-			await db.execute({
-				sql: `INSERT INTO stock_levels (variant_id, location_id, on_hand_qty, reserved_qty, last_movement_at)
-				      VALUES (?, ?, ?, ?, ?)
-				      ON CONFLICT (variant_id, location_id) DO UPDATE SET
-				        on_hand_qty = on_hand_qty + excluded.on_hand_qty,
-				        reserved_qty = reserved_qty + excluded.reserved_qty,
-				        last_movement_at = excluded.last_movement_at`,
+			const update = await db.execute({
+				sql: `UPDATE stock_levels
+				      SET on_hand_qty = on_hand_qty + ?,
+				          reserved_qty = reserved_qty + ?,
+				          last_movement_at = ?
+				      WHERE variant_id = ? AND location_id = ?`,
 				args: [
-					args.variantId,
-					args.locationId,
 					args.onHandDelta,
 					args.reservedDelta,
 					args.occurredAt,
+					args.variantId,
+					args.locationId,
 				],
 			});
+			if (update.rowsAffected === 0) {
+				await db.execute({
+					sql: `INSERT INTO stock_levels (variant_id, location_id, on_hand_qty, reserved_qty, last_movement_at)
+					      VALUES (?, ?, ?, ?, ?)`,
+					args: [
+						args.variantId,
+						args.locationId,
+						args.onHandDelta,
+						args.reservedDelta,
+						args.occurredAt,
+					],
+				});
+			}
 			const row = await this.findByVariantAndLocation(args.variantId, args.locationId);
 			if (!row) throw new Error("failed to reload adjusted stock level");
 			return row;
