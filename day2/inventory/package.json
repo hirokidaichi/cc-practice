@@ -1,0 +1,41 @@
+{
+	"name": "inv",
+	"version": "0.1.0",
+	"private": true,
+	"description": "libSQL + TypeScript CLI inventory management system",
+	"type": "module",
+	"bin": {
+		"inv": "./bin/inv.mjs"
+	},
+	"scripts": {
+		"dev": "tsx src/cli/index.ts",
+		"build": "tsc -p tsconfig.build.json",
+		"start": "node dist/cli/index.js",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:int": "vitest run tests/integration",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"format": "biome format --write .",
+		"typecheck": "tsc -p tsconfig.json --noEmit",
+		"db:migrate": "tsx src/cli/index.ts db migrate",
+		"db:status": "tsx src/cli/index.ts db status",
+		"db:reset": "tsx src/cli/index.ts db reset",
+		"db:reconcile": "tsx src/cli/index.ts db reconcile"
+	},
+	"dependencies": {
+		"@libsql/client": "^0.15.0",
+		"commander": "^13.0.0",
+		"zod": "^3.24.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.0.0",
+		"@types/node": "^22.10.0",
+		"tsx": "^4.19.0",
+		"typescript": "^5.7.0",
+		"vitest": "^2.1.0"
+	},
+	"engines": {
+		"node": ">=20.11"
+	}
+}
