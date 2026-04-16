@@ -2,6 +2,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { InboundService } from "../modules/inbound/service.js";
 import { LocationService } from "../modules/location/service.js";
+import { OrderService } from "../modules/order/service.js";
 import { OutboundService } from "../modules/outbound/service.js";
 import { ProductService } from "../modules/product/service.js";
 import { StockService } from "../modules/stock/service.js";
@@ -19,6 +20,7 @@ export interface CliServices {
 	stock: StockService;
 	inbound: InboundService;
 	outbound: OutboundService;
+	order: OrderService;
 }
 
 export interface CliContext {
@@ -61,6 +63,7 @@ export async function buildContext(options: ContextOptions = {}): Promise<CliCon
 		stock: new StockService(db),
 		inbound: new InboundService(db),
 		outbound: new OutboundService(db),
+		order: new OrderService(db),
 	};
 	return {
 		config,
